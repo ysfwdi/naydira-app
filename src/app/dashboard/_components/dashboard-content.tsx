@@ -12,7 +12,7 @@ export default function DashboardContent() {
   });
   return (
     <section id="content" className="space-y-4">
-      <WizardInput refetch={refetch} />
+      {/* <WizardInput refetch={refetch} /> */}
       <BalanceCards data={data} error={error} />
       <GenerativeContent />
     </section>
