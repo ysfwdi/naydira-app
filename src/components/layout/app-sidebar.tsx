@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { BanknoteIcon, CoinsIcon, LayoutDashboardIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SidebarUserMenu } from "./sidebar-user-menu";
 
 const sidebarItems = [
   {
@@ -27,7 +28,11 @@ const sidebarItems = [
   },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({
+  user,
+}: {
+  user: { email: string; name?: string; avatarUrl?: string };
+}) {
   const pathname = usePathname();
 
   return (
@@ -69,6 +74,7 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarUserMenu user={user} />
     </Sidebar>
   );
 }

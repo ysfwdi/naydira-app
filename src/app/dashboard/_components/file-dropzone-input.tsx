@@ -15,6 +15,7 @@ export default function FileDropzoneInput({
     amount: string;
     type: "income" | "expense";
     category: string;
+    bank_id: string;
     date: string;
     description: string;
   }>;

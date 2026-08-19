@@ -6,15 +6,30 @@ import { useQuery } from "@tanstack/react-query";
 import { getTransactions } from "@/features/transaction/action";
 import CreateTransactionCard from "./create-transaction-card";
 import WizardInput from "../../_components/wizard-input";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
 
 export default function Transaction() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
 
+  // const { data, isLoading, refetch } = useQuery({
+  //   queryKey: ["transactions", page, limit, search],
+  //   queryFn: () => getTransactions({ page, limit, search }),
+  // });
+
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["transactions", page, limit, search],
-    queryFn: () => getTransactions({ page, limit, search }),
+    queryKey: ["balance", dateRange],
+    queryFn: () =>
+      getTransactions({
+        from: dateRange?.from
+          ? format(dateRange.from, "yyyy-MM-dd")
+          : undefined,
+        to: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : undefined,
+      }),
   });
 
   return (

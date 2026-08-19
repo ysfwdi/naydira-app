@@ -25,12 +25,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
 import { format } from "date-fns";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createTransaction } from "@/features/transaction/action";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import FileDropzoneInput from "../../_components/file-dropzone-input";
 import { CATEGORIES } from "@/constants/transaction-constant";
+import { getBanks } from "@/features/bank/action";
 
 const formSchema = z.object({
   amount: z.string().min(1, "Amount is required"),
@@ -38,6 +39,7 @@ const formSchema = z.object({
     error: "Type is required",
   }),
   category: z.string().min(1, "Category is required"),
+  bank_id: z.string().min(1, "Bank/Cash is required"),
   date: z.string().min(1, "Date is required"),
   description: z.string().min(1, "Description is required"),
 });
@@ -53,9 +55,15 @@ export default function CreateTransactionCard({
       amount: "",
       type: "income",
       category: "",
+      bank_id: "",
       date: "",
       description: "",
     },
+  });
+
+  const { data: banks } = useQuery({
+    queryKey: ["banks"],
+    queryFn: getBanks,
   });
 
   const { mutate, isPending } = useMutation({
@@ -149,6 +157,30 @@ export default function CreateTransactionCard({
                       {CATEGORIES.map((category) => (
                         <SelectItem value={category} key={category}>
                           {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="bank_id"
+              render={({ field, fieldState }) => (
+                <Field className="gap-1">
+                  <FieldLabel htmlFor="form-bank">Rekening / Cash</FieldLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger id="form-bank">
+                      <SelectValue placeholder="Pilih rekening" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {banks?.map((bank) => (
+                        <SelectItem value={bank.bank_id} key={bank.bank_id}>
+                          {bank.name_bank}
                         </SelectItem>
                       ))}
                     </SelectContent>

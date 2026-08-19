@@ -25,9 +25,10 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { CATEGORIES } from "@/constants/transaction-constant";
+import { getBanks } from "@/features/bank/action";
 import { updateTransaction } from "@/features/transaction/action";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -40,6 +41,7 @@ const formSchema = z.object({
     error: "Type is required",
   }),
   category: z.string().min(1, "Category is required"),
+  bank_id: z.string().min(1, "Bank/Cash is required"),
   date: z.string().min(1, "Date is required"),
   description: z.string().min(1, "Description is required"),
 });
@@ -69,6 +71,7 @@ export default function UpdateTransactionDialog({
         : "",
       type: selectedTransaction ? selectedTransaction.data.type : "income",
       category: selectedTransaction ? selectedTransaction.data.category : "",
+      bank_id: selectedTransaction ? selectedTransaction.data.bank_id : "",
       date: selectedTransaction ? String(selectedTransaction.data.date) : "",
       description: selectedTransaction
         ? selectedTransaction.data.description
@@ -103,12 +106,18 @@ export default function UpdateTransactionDialog({
     },
   });
 
+  const { data: banks } = useQuery({
+    queryKey: ["banks"],
+    queryFn: getBanks,
+  });
+
   useEffect(() => {
     if (selectedTransaction) {
       form.reset({
         amount: String(selectedTransaction.data.amount),
         type: selectedTransaction.data.type,
         category: selectedTransaction.data.category,
+        bank_id: selectedTransaction.data.bank_id,
         date: String(selectedTransaction.data.date),
         description: String(selectedTransaction.data.description),
       });
@@ -191,6 +200,30 @@ export default function UpdateTransactionDialog({
                         {CATEGORIES.map((category) => (
                           <SelectItem value={category} key={category}>
                             {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="bank_id"
+                render={({ field, fieldState }) => (
+                  <Field className="gap-1">
+                    <FieldLabel htmlFor="form-bank">Rekening / Cash</FieldLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger id="form-bank">
+                        <SelectValue placeholder="Pilih rekening" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {banks?.map((bank) => (
+                          <SelectItem value={bank.bank_id} key={bank.bank_id}>
+                            {bank.name_bank}
                           </SelectItem>
                         ))}
                       </SelectContent>

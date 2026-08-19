@@ -14,7 +14,7 @@ export default function Home() {
       <CoinsIcon className="text-primary size-20" />
       <h1 className="text-primary text-4xl font-bold">Welcome to Naydira</h1>
       <p className="mt-2 text-lg">Your personal finance app with AI</p>
-      <Link href="/dashboard">
+      <Link href="/login">
         <Button className="mt-2 " size="lg">
           Get Started
         </Button>
