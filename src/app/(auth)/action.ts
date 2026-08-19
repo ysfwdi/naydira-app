@@ -1,5 +1,6 @@
 "use server";
 
+import { ENVIRONMENT } from "@/config/environment";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -9,7 +10,7 @@ export async function loginWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`,
+      redirectTo: `${ENVIRONMENT.siteUrl}/api/auth/callback`,
     },
   });
 
