@@ -38,6 +38,8 @@ import { useEffect, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import DeleteTransactionDialog from "./delete-transaction-dialog";
 import UpdateTransactionDialog from "./update-transaction-dialog";
+import { DateRange } from "react-day-picker";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 
 const TABLE_HEADER = [
   "#",
@@ -58,6 +60,8 @@ export default function TransactionTable({
   setPage,
   setLimit,
   setSearch,
+  dateRange,
+  setDateRange,
 }: {
   transactions?: Awaited<ReturnType<typeof getTransactions>>;
   page: number;
@@ -68,6 +72,8 @@ export default function TransactionTable({
   setSearch: (search: string) => void;
   isLoading: boolean;
   refetch: () => void;
+  dateRange?: DateRange;
+  setDateRange: (range?: DateRange) => void;
 }) {
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -93,7 +99,8 @@ export default function TransactionTable({
             <CardTitle>Recent Transaction</CardTitle>
             <CardDescription>Your latest financial activities</CardDescription>
           </div>
-          <div>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <DateRangePicker value={dateRange} onChange={setDateRange} />
             <Input
               placeholder="Search..."
               value={localSearch}

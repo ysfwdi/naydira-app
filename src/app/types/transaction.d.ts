@@ -6,7 +6,7 @@ export type Transaction = {
   amount: number;
   type: "income" | "expense";
   user_id: string | null;
-  bank_id: string;
+  bank_id?: string;
   embedding: number[] | null;
 };
 
