@@ -31,15 +31,22 @@ export async function logout() {
 
 export async function getCurrentUser() {
   const supabase = await createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) return null;
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("name, avatar_url")
+    .eq("id", user.id)
+    .single();
+
   return {
     email: user.email ?? "",
-    name: user.user_metadata?.full_name as string | undefined,
-    avatarUrl: user.user_metadata?.avatar_url as string | undefined,
+    name: profile?.name || undefined,
+    avatarUrl: profile?.avatar_url || undefined,
   };
 }

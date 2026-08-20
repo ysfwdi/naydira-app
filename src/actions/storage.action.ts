@@ -70,10 +70,13 @@ export async function uploadFile(
 
   // Hapus file lama supaya storage tidak menumpuk
   if (oldFilePath) {
-    await supabase.storage
+    const { error: removeError } = await supabase.storage
       .from(bucket)
-      .remove([oldFilePath])
-      .catch(() => {});
+      .remove([oldFilePath]);
+
+    if (removeError) {
+      console.error("Gagal hapus avatar lama:", removeError.message);
+    }
   }
 
   const {

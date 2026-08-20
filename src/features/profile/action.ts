@@ -7,20 +7,31 @@ import { revalidatePath } from "next/cache";
 
 export async function getCurrentUserProfile() {
   const supabase = await createClient();
+
   const {
     data: { user },
-    error,
+    error: authError,
   } = await supabase.auth.getUser();
 
-  if (error || !user) {
+  if (authError || !user) {
     throw new Error("Failed to fetch user profile");
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("name, avatar_url, role")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError) {
+    throw new Error("Failed to fetch user profile: " + profileError.message);
   }
 
   return {
     id: user.id,
     email: user.email,
-    name: user.user_metadata?.name || user.user_metadata?.full_name || "",
-    avatarUrl: user.user_metadata?.avatar_url || null,
+    name: profile.name || "",
+    avatarUrl: profile.avatar_url || null,
   };
 }
 
@@ -77,7 +88,9 @@ export async function updateProfile(formData: FormData) {
       ...(avatarUrl && { avatar_url: avatarUrl }),
       updated_at: new Date().toISOString(),
     })
-    .eq("id", user.id);
+    .eq("id", user.id)
+    .select()
+    .single();
 
   if (updateError) {
     throw new Error(updateError.message);

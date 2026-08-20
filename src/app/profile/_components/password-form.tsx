@@ -46,9 +46,12 @@ export default function PasswordForm() {
       form.reset();
     },
     onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to update password",
-      );
+      const message =
+        error instanceof Error ? error.message : "Failed to update password";
+      const friendlyMessage = message.includes("should be different")
+        ? "Password baru tidak boleh sama dengan password lama. Silakan gunakan password lain."
+        : message;
+      toast.error(friendlyMessage);
     },
   });
 
