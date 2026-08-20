@@ -4,6 +4,9 @@ import DashboardContent from "./_components/dashboard-content";
 export const metadata: Metadata = {
   title: "Naydira - Dashboard",
   description: "Your personal financial dashboard",
+  icons: {
+    icon: "/naydira-app.ico",
+  },
 };
 
 export default function DashboardPage() {

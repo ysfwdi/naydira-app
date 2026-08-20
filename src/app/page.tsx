@@ -6,6 +6,9 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Naydira",
   description: "Your personal finance app with AI",
+  icons: {
+    icon: "/naydira-app.ico",
+  },
 };
 
 export default function Home() {

@@ -4,6 +4,9 @@ import Transaction from "./_components/transaction";
 export const metadata: Metadata = {
   title: "Naydira - Transaction",
   description: "View and mange your finacial transaction",
+  icons: {
+    icon: "/naydira-app.ico",
+  },
 };
 
 export default function TransactionPage() {

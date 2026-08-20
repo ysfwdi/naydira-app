@@ -11,7 +11,12 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import Link from "next/link";
-import { BanknoteIcon, CoinsIcon, LayoutDashboardIcon } from "lucide-react";
+import {
+  BanknoteIcon,
+  CoinsIcon,
+  LayoutDashboardIcon,
+  UserCogIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SidebarUserMenu } from "./sidebar-user-menu";
 
@@ -25,6 +30,11 @@ const sidebarItems = [
     label: "Transaction",
     icon: <BanknoteIcon />,
     href: "/dashboard/transaction",
+  },
+  {
+    label: "Profile",
+    icon: <UserCogIcon />,
+    href: "/profile",
   },
 ];
 
