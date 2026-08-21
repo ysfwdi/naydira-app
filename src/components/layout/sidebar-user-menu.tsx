@@ -1,6 +1,5 @@
 "use client";
 
-import { logout } from "@/app/(auth)/action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,9 +13,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { ChevronsUpDownIcon, LogOutIcon, UserRoundPenIcon } from "lucide-react";
+import { ChevronsUpDownIcon, UserRoundPenIcon } from "lucide-react";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
+import { LogoutButton } from "../common/logout-button";
 
 export function SidebarUserMenu({
   user,
@@ -69,10 +69,7 @@ export function SidebarUserMenu({
                   Profile
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => logout()} variant="destructive">
-                <LogOutIcon />
-                Logout
-              </DropdownMenuItem>
+              <LogoutButton className="w-full justify-start" />
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>

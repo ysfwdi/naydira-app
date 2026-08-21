@@ -38,7 +38,7 @@ export default function Transaction() {
   return (
     <div className="space-y-4">
       <WizardInput refetch={refetch} />
-      <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8">
+      <div className="grid flex-1 grid-cols-1 md:grid-cols-[2fr_1fr] gap-8">
         <TransactionTable
           transactions={data}
           isLoading={isLoading}
@@ -53,7 +53,9 @@ export default function Transaction() {
           setDateRange={setDateRange}
         />
 
-        <CreateTransactionCard refetch={refetch} />
+        <div className="hidden md:block">
+          <CreateTransactionCard refetch={refetch} />
+        </div>
       </div>
     </div>
   );

@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 import { loginSchemaForm } from "@/validations/auth-validations";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function login(
   prevState: AuthFormState,
@@ -60,10 +59,14 @@ export async function login(
       httpOnly: true,
       path: "/",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 365, // 1 year
+      maxAge: 60 * 60 * 24 * 365,
     });
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+
+  return {
+    status: "success",
+    errors: { _form: [] },
+  };
 }

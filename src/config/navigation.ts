@@ -2,6 +2,7 @@ import {
   BanknoteIcon,
   CoinsIcon,
   LayoutDashboardIcon,
+  MenuIcon,
   UserCogIcon,
   type LucideIcon,
 } from "lucide-react";
@@ -28,6 +29,11 @@ export const navItems: NavItem[] = [
     icon: UserCogIcon,
     href: "/profile",
   },
+  // {
+  //   label: "Menu",
+  //   icon: MenuIcon,
+  //   href: "/profile",
+  // },
 ];
 
 export const brandIcon = CoinsIcon;

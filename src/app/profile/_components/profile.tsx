@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCurrentUserProfile } from "@/features/profile/action";
 import ProfileForm from "./profile-form";
 import PasswordForm from "./password-form";
+import LogoutCard from "./logout-card";
 import { Loader2Icon } from "lucide-react";
 
 export default function Profile() {
@@ -26,6 +27,7 @@ export default function Profile() {
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       <ProfileForm profile={data} refetch={refetch} />
       <PasswordForm />
+      <LogoutCard />{" "}
     </div>
   );
 }

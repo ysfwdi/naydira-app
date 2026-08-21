@@ -22,8 +22,11 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { login } from "../action";
 import { loginWithGoogle } from "../../action";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
+
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchemaForm),
     defaultValues: INITIAL_LOGIN_FROM,
@@ -53,6 +56,12 @@ export default function Login() {
       startTransition(() => {
         loginAction(null);
       });
+    }
+    if (loginState.status === "success") {
+      toast.success("Login berhasil!", {
+        description: "Selamat datang kembali di NayDira.",
+      });
+      router.push("/dashboard");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginState]);

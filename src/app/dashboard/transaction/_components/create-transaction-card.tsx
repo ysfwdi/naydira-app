@@ -46,8 +46,10 @@ const formSchema = z.object({
 
 export default function CreateTransactionCard({
   refetch,
+  hideCardWrapper = false,
 }: {
   refetch: () => void;
+  hideCardWrapper?: boolean;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -90,6 +92,150 @@ export default function CreateTransactionCard({
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     mutate(data);
   };
+
+  const formContent = (
+    <>
+      <div className="mb-4">
+        <FileDropzoneInput setValues={form.setValues} refetch={refetch} />
+      </div>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FieldGroup className="gap-3">
+          <Controller
+            control={form.control}
+            name="amount"
+            render={({ field, fieldState }) => (
+              <Field className="gap-1">
+                <FieldLabel htmlFor="form-amount">Amount</FieldLabel>
+                <Input
+                  {...field}
+                  id="form-amount"
+                  placeholder="0,00"
+                  autoComplete="off"
+                  type="number"
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="type"
+            render={({ field, fieldState }) => (
+              <Field className="gap-1">
+                <FieldLabel htmlFor="form-type">Type</FieldLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger id="form-type">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="income">Income</SelectItem>
+                    <SelectItem value="expense">Expense</SelectItem>
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="category"
+            render={({ field, fieldState }) => (
+              <Field className="gap-1">
+                <FieldLabel htmlFor="form-category">Category</FieldLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger id="form-category">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((category) => (
+                      <SelectItem value={category} key={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="bank_id"
+            render={({ field, fieldState }) => (
+              <Field className="gap-1">
+                <FieldLabel htmlFor="form-bank">Rekening / Cash</FieldLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger id="form-bank">
+                    <SelectValue placeholder="Pilih rekening" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {banks?.map((bank) => (
+                      <SelectItem value={bank.bank_id} key={bank.bank_id}>
+                        {bank.name_bank}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="date"
+            render={({ field, fieldState }) => (
+              <Field className="gap-1">
+                <FieldLabel htmlFor="form-date">Date</FieldLabel>
+                <DatePicker
+                  id="form-date"
+                  value={field.value ? new Date(field.value) : undefined}
+                  onChange={(date) =>
+                    field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                  }
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="description"
+            render={({ field, fieldState }) => (
+              <Field className="gap-1">
+                <FieldLabel htmlFor="form-description">Description</FieldLabel>
+                <Textarea
+                  {...field}
+                  id="form-description"
+                  placeholder="Enter description"
+                  autoComplete="off"
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Button size="lg" type="submit" disabled={isPending}>
+            {isPending ? "Creating..." : "Create Transaction"}
+          </Button>
+        </FieldGroup>
+      </form>
+    </>
+  );
+
+  if (hideCardWrapper) {
+    return formContent;
+  }
 
   return (
     <Card className="w-full gap-2 h-fit">

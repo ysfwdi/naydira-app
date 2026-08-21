@@ -33,13 +33,21 @@ import {
 } from "@/components/ui/table";
 import { getTransactions } from "@/features/transaction/action";
 import { cn, convertToIDR } from "@/lib/utils";
-import { PencilIcon, Trash2Icon } from "lucide-react";
+import { PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import DeleteTransactionDialog from "./delete-transaction-dialog";
 import UpdateTransactionDialog from "./update-transaction-dialog";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import CreateTransactionCard from "./create-transaction-card";
 
 const TABLE_HEADER = [
   "#",
@@ -76,6 +84,7 @@ export default function TransactionTable({
   setDateRange: (range?: DateRange) => void;
 }) {
   const [localSearch, setLocalSearch] = useState(search);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -91,13 +100,31 @@ export default function TransactionTable({
     data: Omit<Transaction, "user_id" | "embedding">;
     action: "update" | "delete";
   } | null>(null);
+
+  function handleCreateSuccess() {
+    refetch();
+    setIsCreateOpen(false);
+  }
+
   return (
     <Fragment>
-      <Card className="w-full gap-2">
+      <Card className="flex flex-col w-full h-full gap-2">
         <CardHeader className="flex flex-col justify-between gap-2 md:flex-row md:items-center">
-          <div>
-            <CardTitle>Recent Transaction</CardTitle>
-            <CardDescription>Your latest financial activities</CardDescription>
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <CardTitle>Recent Transaction</CardTitle>
+              <CardDescription>
+                Your latest financial activities
+              </CardDescription>
+            </div>
+            <Button
+              size="sm"
+              className="md:hidden flex self-end"
+              onClick={() => setIsCreateOpen(true)}
+            >
+              <PlusIcon className="size-4" />
+              Add
+            </Button>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
             <DateRangePicker value={dateRange} onChange={setDateRange} />
@@ -109,7 +136,7 @@ export default function TransactionTable({
             />
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col flex-1 overflow-y-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -182,7 +209,7 @@ export default function TransactionTable({
                 </TableCaption>
               ))}
           </Table>
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between mt-auto">
             <div className="flex items-center gap-2">
               <div className="text-sm text-muted-foreground">Rows per page</div>
               <Select
@@ -233,6 +260,7 @@ export default function TransactionTable({
           </div>
         </CardContent>
       </Card>
+
       <DeleteTransactionDialog
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
@@ -243,6 +271,19 @@ export default function TransactionTable({
         setSelectedTransaction={setSelectedTransaction}
         refetch={refetch}
       />
+
+      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Create Transaction</DialogTitle>
+            <DialogDescription>Add a new financial activity</DialogDescription>
+          </DialogHeader>
+          <CreateTransactionCard
+            refetch={handleCreateSuccess}
+            hideCardWrapper
+          />
+        </DialogContent>
+      </Dialog>
     </Fragment>
   );
 }
