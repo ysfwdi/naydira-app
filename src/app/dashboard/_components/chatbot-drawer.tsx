@@ -24,8 +24,10 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Conversation } from "@/app/types/ai";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function ChatbotDrawer() {
+  const isMobile = useIsMobile();
   const chatRef = useRef<HTMLDivElement>(null);
   const [conversation, setConversation] = useState<Conversation[]>([]);
   const [isThinking, setIsThinking] = useState<boolean>(false);
@@ -126,16 +128,29 @@ export default function ChatbotDrawer() {
 
   return (
     <Drawer direction="right" modal={false}>
-      <DrawerTrigger className="fixed bottom-4 right-4" asChild>
+      <DrawerTrigger
+        className={cn(
+          "fixed z-40 size-14 rounded-full",
+          "right-4 bottom-20",
+          "md:bottom-4",
+        )}
+        asChild
+      >
         <Button
-          className="rounded-full size-14"
+          className={cn(
+            "fixed z-40 right-4 bottom-20 md:bottom-4",
+            "data-[state=open]:hidden",
+          )}
           size="icon-lg"
           variant="outline"
         >
           <BotIcon className="size-6" />
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="w-screen! md:w-110!">
+      <DrawerContent
+        className="w-screen! md:w-110!"
+        style={{ bottom: isMobile ? "4rem" : 0 }}
+      >
         <DrawerHeader className="flex flex-row justify-between">
           <div>
             <DrawerTitle className="font-bold text-primary">

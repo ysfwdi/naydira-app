@@ -11,32 +11,9 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import Link from "next/link";
-import {
-  BanknoteIcon,
-  CoinsIcon,
-  LayoutDashboardIcon,
-  UserCogIcon,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SidebarUserMenu } from "./sidebar-user-menu";
-
-const sidebarItems = [
-  {
-    label: "Dashboard",
-    icon: <LayoutDashboardIcon />,
-    href: "/dashboard",
-  },
-  {
-    label: "Transaction",
-    icon: <BanknoteIcon />,
-    href: "/dashboard/transaction",
-  },
-  {
-    label: "Profile",
-    icon: <UserCogIcon />,
-    href: "/profile",
-  },
-];
+import { navItems, brandIcon as BrandIcon } from "@/config/navigation";
 
 export function AppSidebar({
   user,
@@ -52,7 +29,7 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <Link href="/dashboard">
-                <CoinsIcon className="text-primary size-5!" />
+                <BrandIcon className="text-primary size-5!" />
                 <h1 className="font-bold text-2xl text-primary">Naydira App</h1>
               </Link>
             </SidebarMenuButton>
@@ -62,7 +39,7 @@ export function AppSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {sidebarItems.map((item) => (
+            {navItems.map((item) => (
               <SidebarMenuItem key={item.label}>
                 <SidebarMenuButton
                   asChild
@@ -75,7 +52,7 @@ export function AppSidebar({
                   )}
                 >
                   <Link href={item.href}>
-                    {item.icon}
+                    <item.icon />
                     <span>{item.label}</span>
                   </Link>
                 </SidebarMenuButton>
